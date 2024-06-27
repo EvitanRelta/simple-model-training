@@ -12,11 +12,15 @@ from torchvision.datasets import VisionDataset
 
 def main() -> None:
     """Main function to orchestrate the MNIST download, model creation, training, and inference."""
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+
     train_dataset, test_dataset = download_mnist()
     train_loader, test_loader = create_data_loaders(train_dataset, test_dataset)
     model = create_model()
-    train_model(model, train_loader)
-    run_inference(model, test_loader)
+    model.to(device)  # Move model to GPU/CPU
+    train_model(model, train_loader, device=device)
+    run_inference(model, test_loader, device=device)
 
 
 def download_mnist() -> Tuple[VisionDataset, VisionDataset]:
@@ -56,6 +60,7 @@ def create_model() -> nn.Sequential:
 def train_model(
     model: nn.Sequential,
     train_loader: DataLoader[Tuple[Tensor, Tensor]],
+    device: torch.device,
     num_epochs: int = 5,
 ) -> None:
     """Trains the model on the training data for a specified number of epochs."""
@@ -66,6 +71,7 @@ def train_model(
         model.train()
         pbar = tqdm(train_loader, desc=f'Epoch {epoch+1}/{num_epochs}')
         for data, target in pbar:
+            data, target = data.to(device), target.to(device)
             optimizer.zero_grad()
             output: Tensor = model.forward(data)
             loss = criterion.forward(output, target)
@@ -73,7 +79,11 @@ def train_model(
             optimizer.step()
             pbar.set_postfix({'Loss': f'{loss.item():.4f}'})
 
-def run_inference(model: nn.Sequential, test_loader: DataLoader[Tuple[Tensor, Tensor]]) -> None:
+def run_inference(
+    model: nn.Sequential,
+    test_loader: DataLoader[Tuple[Tensor, Tensor]],
+    device: torch.device,
+) -> None:
     """Runs inference on the test data and prints the accuracy."""
     model.eval()
     correct = 0
@@ -81,6 +91,7 @@ def run_inference(model: nn.Sequential, test_loader: DataLoader[Tuple[Tensor, Te
 
     with torch.no_grad():
         for data, target in test_loader:
+            data, target = data.to(device), target.to(device)
             output = model(data)
             _, predicted = torch.max(output.data, 1)
             total += target.size(0)
