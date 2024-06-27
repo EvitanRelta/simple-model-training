@@ -61,7 +61,7 @@ def train_model(
     model: nn.Sequential,
     train_loader: DataLoader[Tuple[Tensor, Tensor]],
     device: torch.device,
-    num_epochs: int = 5,
+    num_epochs: int = 3,
 ) -> None:
     """Trains the model on the training data for a specified number of epochs."""
     criterion = nn.CrossEntropyLoss()
