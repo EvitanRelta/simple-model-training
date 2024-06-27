@@ -13,7 +13,7 @@ from torchvision.datasets import VisionDataset
 def main() -> None:
     """Main function to orchestrate the MNIST download, model creation, training, and inference."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
+    print(f'Running on {"GPU" if device.type == "cuda" else "CPU"}')
 
     train_dataset, test_dataset = download_mnist()
     train_loader, test_loader = create_data_loaders(train_dataset, test_dataset)
