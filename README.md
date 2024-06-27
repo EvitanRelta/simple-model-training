@@ -4,6 +4,8 @@ This repository contains a simple script to train a Convolutional Neural Network
 
 It will download the MNIST dataset automatically if needed.
 
+<br>
+
 ## Requirements
 
 To run this script, you need to have PyTorch installed. For GPU acceleration, ensure you have CUDA installed on your system.
@@ -18,11 +20,20 @@ To run this script, you need to have PyTorch installed. For GPU acceleration, en
 
 3. Follow the installation instructions provided on the website.
 
+<br>
+
 ## Usage
 
-To train the model, simply run:
+Clone the repository:
 
+```bash
+git clone https://github.com/EvitanRelta/simple-model-training.git
+cd simple-model-training
 ```
+
+Then to train the model, simply run:
+
+```bash
 python train_mnist_model.py
 ```
 
